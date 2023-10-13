@@ -108,11 +108,12 @@ export function DocumentEditorProvider({
     a.download = "export.json";
     a.click();
     URL.revokeObjectURL(objectUrl);
+    console.log(jsonDocText);
   };
 
   const importDocument = (e: ChangeEvent<HTMLInputElement>) => {
     if (!editor) return;
-    console.log(e);
+
     const file = e.target.files?.[0];
     if (!file) return alert("Error during file import");
     const fileReader = new FileReader();

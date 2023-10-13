@@ -5,7 +5,7 @@ import { DocumentEditorProvider } from "@/contexts/document-editor-context";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Comment } from "@/lib/comment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Underline from "@tiptap/extension-underline";
 
 export default function Home() {
@@ -19,7 +19,6 @@ export default function Home() {
           class: "bg-secondary",
         },
         onCommentActivated: (commentId) => {
-          console.log("commentIdChanged", commentId);
           setActiveCommentId(commentId);
         },
       }),
