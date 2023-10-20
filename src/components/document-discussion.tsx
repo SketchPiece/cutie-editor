@@ -3,6 +3,7 @@ import { useFloatingComments } from "@/hooks/useFloatingComments";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import CommentReplyDialog from "./comment-reply-dialog";
 
 const COMMENT_CARD_HEIGHT = 176;
 
@@ -37,7 +38,7 @@ function DocumentDiscussion() {
         <h2 className="card-title">Comments</h2>
         <div className="divider" />
         <div className="relative">
-          {comments.map(({ id, content }) => {
+          {comments.map(({ id, content, reply }) => {
             return (
               <div
                 className={cn(
@@ -50,35 +51,8 @@ function DocumentDiscussion() {
                 key={id}
                 onClick={() => selectActiveComment(id)}
               >
-                <div className="card-body relative">
-                  <div
-                    className={cn(
-                      "w-2 h-6 bg-secondary absolute -left-1 rounded-md",
-                      id === activeCommentId ? "bg-primary" : "bg-secondary"
-                    )}
-                  ></div>
-                  <p className="card-title flex">
-                    <div className="avatar placeholder">
-                      <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
-                        <span>U</span>
-                      </div>
-                    </div>
-                    Username
-                    <button
-                      className="btn btn-error ml-auto text-md"
-                      onClick={() => removeComment(id)}
-                    >
-                      <RiDeleteBin2Line />
-                    </button>
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Type your comment here"
-                    value={content}
-                    className="input mt-2"
-                    onChange={(e) => updateComment(id, e.target.value)}
-                  />
-                </div>
+                {/* not necessary to transfer content but still reserved here */}
+                <CommentReplyDialog id={id} content={content} reply={reply} />
               </div>
             );
           })}

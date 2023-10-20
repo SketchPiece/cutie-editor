@@ -20,6 +20,8 @@ interface DocumentEditorContextApi {
   resetActiveComment: () => void;
   importDocument: (e: ChangeEvent<HTMLInputElement>) => void;
   exportDocument: () => void;
+  addCommentReply: () => void;
+  removeCommentReply: () => void;
 }
 
 const noop = () => {};
@@ -35,6 +37,8 @@ const DocumentEditorContext = createContext<DocumentEditorContextApi>({
   resetActiveComment: noop,
   importDocument: noop,
   exportDocument: noop,
+  addCommentReply: noop,
+  removeCommentReply: noop,
 });
 
 interface DocumentEditorProviderProps extends PropsWithChildren {
@@ -46,6 +50,7 @@ interface DocumentEditorProviderProps extends PropsWithChildren {
 export interface Comment {
   id: string;
   content: string;
+  reply: Comment[];
 }
 
 export function DocumentEditorProvider({
@@ -61,12 +66,14 @@ export function DocumentEditorProvider({
     const newComment = {
       id: commentId,
       content: "",
+      reply: [],
     } satisfies Comment;
 
     editor?.commands.setComment(commentId);
     onActiveCommentChange(commentId);
     setComments((prevComments) => [...prevComments, newComment]);
   };
+
   const updateComment = (id: string, content: string) => {
     setComments((prevComments) =>
       prevComments.map((comment) =>
@@ -134,6 +141,28 @@ export function DocumentEditorProvider({
     });
   };
 
+  const addCommentReply = (parentId: string, content: string) => {
+    const commentId = v4();
+    const newReply = {
+      id: commentId,
+      content: content,
+      reply: [],
+    } satisfies Comment;
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === parentId ? { ...comment, reply: [...comment.reply, newReply] } : comment
+      )
+    );
+  }
+
+  const removeCommentReply = (parentId: string, childId: string) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === parentId ? { ...comment, reply: comment.reply.filter((item) => item.id !== childId) } : comment
+      )
+    );
+  }
+
   return (
     <DocumentEditorContext.Provider
       value={{
@@ -147,6 +176,8 @@ export function DocumentEditorProvider({
         removeComment,
         importDocument,
         exportDocument,
+        addCommentReply,
+        removeCommentReply,
       }}
     >
       {children}
