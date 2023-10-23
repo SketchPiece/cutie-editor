@@ -1,4 +1,4 @@
-# Fancy Editor
+# Cutie Editor
 
 ![screenshot](screenshot.png)
 
